@@ -1,0 +1,32 @@
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  font-family: Inter, sans-serif;
+  margin: 0;
+  padding: 0;
+
+  /* background-image: radial-gradient( circle 975px at 2.6% 48.3%,  rgba(0,8,120,1) 0%, rgba(95,184,224,1) 99.7% ); /*Other theme variation*/ 
+  /* background-image: linear-gradient( 109.6deg,  rgba(48,207,208,1) 11.2%, rgba(51,8,103,1) 92.5% ); the main theme */
+
+  background-image: radial-gradient( circle 705px at 3.8% 26.2%,  rgba(227,229,255,1) 0%, rgba(135,145,255,1) 100.2% ); /*Main Theme for the website*/ 
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+  
+}
+
