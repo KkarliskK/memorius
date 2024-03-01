@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import css from '../style/Landing.module.css';
 
 function LandingPage() {
@@ -11,11 +12,14 @@ function LandingPage() {
             </h1>
             <p className={`${css.p}`}>A simple card memory game. 
                 Flip the cards and try to match two to gain score. 
-                Beat highscores in <a href='#'>leaderboard</a>.
-                Earn coins by compleating levels, buy custom cards and themes. 
+                Beat highscores in <a className={`text-teal-300`} href='/leaderboard'>leaderboard</a>.
+                Buy custom cards and themes in the shop with coins.
+                You can earn coins by completing levels! 
                 And a lot more, Start Now!
             </p>
-            <button className={`p-3 m-4 ${css.createAccountButton}`}><p className={`w-full ${css.createAccountButtonText}`}>Create Account</p></button>
+            <Link className={`p-3 m-4 ${css.link}`} to='/register'>
+              <p className={`w-full ${css.createAccountButtonText}`}>Create Account</p>
+            </Link>
         </div>
       </div>
     </>
