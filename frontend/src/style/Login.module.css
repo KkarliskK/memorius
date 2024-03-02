@@ -1,0 +1,112 @@
+.mainContainer{
+    min-height: 95vh;
+    position: relative;
+}
+
+.signinContainer{
+    min-height: 55vh;
+    border-radius: 8px;
+    background-color: white;
+    width: 30%;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    z-index: 2;
+}
+
+.inputField{
+    background-color: rgba(247, 247, 247, 0.75);
+    box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.45);
+    border-radius: 3px;
+    outline: none;
+    border: none;
+}
+
+.signinForm{
+    width: 100%;
+    height: 100%;
+}
+
+.signinSplit{
+    margin: 30px;
+    width: 60%;
+}
+
+.signinHead{
+    display: flex;
+    width: 100%;
+    min-height: 10vh;
+}
+
+.signinBody{
+    display: flex;
+    flex-direction: column;
+    width: 100%;    
+}
+
+.signinFooter{
+    display: flex;
+    width: 100%;
+}
+
+.inputBox{
+    width: 100%;
+    height: 100%;
+}
+
+.h2{
+    font-size: 34px;
+    font-weight: 700;
+    width: 50%;
+    text-align: center;
+}
+
+.wave2{
+    z-index: -1;
+}
+
+
+
+
+
+
+/*********Button related css**********/
+.signupButton{
+    background: black;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 22px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    transition: all ease-in-out .25s;
+    width: 30%;
+}
+
+.signupButton:hover{
+    box-shadow: 0px 0px 11px 1px rgba(0,0,0,0.95);
+}
+
+.signupButtonText{
+    background: linear-gradient(to right, crimson,purple,blue);
+    background-size: 200% 200%;
+    animation: rainbow 2s ease-in-out infinite;
+    background-clip: text;
+    -webkit-background-clip:text;
+    color:rgb(255, 255, 255);
+    font-size: 22px;
+    text-align:center;
+    transition: color .2s ease-in-out;
+    text-transform:uppercase;
+    font-weight: 700;
+    border-radius: 15px;
+  }
+  
+  .signupButtonText:hover{
+    color:rgba(255, 255, 255, 0);
+  }
+
+  @keyframes rainbow { 
+    0%{background-position:left}
+    50%{background-position:right}
+    100%{background-position:left}
+  }

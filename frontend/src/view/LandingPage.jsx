@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import css from '../style/Landing.module.css';
+import wave1 from '../assets/wave1.png';
+import wave2 from '../assets/wave2.png';
 
 function LandingPage() {
 
   return (
     <>
-      <div className={`flex justify-center w-full min-h-full mt-32 ${css.mainContainer}`}>
-        <div className={`w-full flex justify-center items-center flex-col`}>
+      <div className={`relative flex justify-center w-full ${css.mainContainer}`}>
+        <img className={`absolute w-4/5 bottom-0 left-0 h-2/6 `} src={wave1} />
+        <img className={`absolute w-4/5 top-0 right-0 rotate-180 ${css.wave2}`} src={wave2} />
+        <div className={`w-full flex justify-center items-center flex-col mb-20`}>
             <h1 className={`font-bold text-7xl text-slate-100 text-center pt-3 header-landing`}>Welcome to
                 <span className={`block text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-pink-500 to-blue-500 ${css.h1}`}>Memorius</span>
             </h1>

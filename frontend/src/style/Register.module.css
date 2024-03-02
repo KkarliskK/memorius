@@ -1,18 +1,20 @@
 .mainContainer{
-    min-height: 90vh;
+    min-height: 95vh;
+    position: relative;
 }
 
 .signupContainer{
     min-height: 55vh;
     border-radius: 8px;
     background-color: white;
-    width: 40%;
+    width: 35%;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    z-index: 2;
 }
 
 .inputField{
-    background-color: rgba(245, 244, 244, 0.75);
-    box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.45);
+    background-color: rgba(247, 247, 247, 0.75);
+    box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.45);
     border-radius: 3px;
     outline: none;
     border: none;
@@ -56,6 +58,22 @@
     width: 50%;
     text-align: center;
 }
+
+.wave2{
+    z-index: -1;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*********Button related css**********/
 
 .signupButton{
     background: black;

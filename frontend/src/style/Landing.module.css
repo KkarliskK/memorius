@@ -40,7 +40,7 @@
 
 
   .mainContainer{
-    height: 100%;
+    min-height: 95vh;
   }
 
   .p{
@@ -50,4 +50,9 @@
     text-align: center;
     margin: 15px;
   }
+
+.wave2{
+  z-index: -1;
+}
+
 
