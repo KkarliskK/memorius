@@ -1,8 +1,114 @@
-.card{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
+.gameWindow{
+    display: grid; 
+    margin: auto; 
+    margin-top: 3rem; 
+    grid-template-columns: repeat(5, 9rem); 
+    place-items: center; 
+    row-gap: 2rem; 
 }
+
+.face { 
+    height: 6rem; 
+} 
+  
+.back { 
+    height: 6rem; 
+    width: 6rem; 
+    background-color: rgb(137, 64, 185); 
+    color: rgb(61, 21, 21); 
+} 
+  
+.item .face { 
+    position: absolute; 
+    transform: rotateY(90deg); 
+    transition: all ease-in 0.25s; 
+  
+} 
+  
+.toggled .face { 
+    transform: rotateY(0deg); 
+    transition-delay: 0.25s; 
+} 
+  
+.item .back { 
+    transition: all ease-in 0.25s; 
+    transition-delay: 0.25s; 
+} 
+  
+.toggled .back { 
+    transform: rotateY(90deg); 
+    transition-delay: 0s; 
+}
+
+
+.winningScreen{
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+
+
+
+
+
+/********************Buttons**********************/
+.nextLevel{
+    background: black;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    transition: all ease-in-out .25s;
+    width: 30%;
+}
+
+.nextLevel:hover{
+    box-shadow: 0px 0px 11px 1px rgba(0,0,0,0.95);
+}
+
+.nextLevelText{
+    background: linear-gradient(to right, crimson,purple,blue);
+    background-size: 200% 200%;
+    animation: rainbow 2s ease-in-out infinite;
+    background-clip: text;
+    -webkit-background-clip:text;
+    color:rgb(255, 255, 255);
+    font-size: 20px;
+    text-align:center;
+    transition: color .2s ease-in-out;
+    text-transform:uppercase;
+    font-weight: 700;
+    border-radius: 15px;
+  }
+  
+  .nextLevelText:hover{
+    color:rgba(255, 255, 255, 0);
+  }
+
+
+  .newGame{
+    background: black;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    transition: all ease-in-out .25s;
+    width: 10%;
+  }
+
+  .newGame:hover{
+    box-shadow: 0px 0px 11px 1px rgba(0,0,0,0.95);
+}
+
+  @keyframes rainbow { 
+    0%{background-position:left}
+    50%{background-position:right}
+    100%{background-position:left}
+  }
