@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from './components/Header';
 import Login from './view/Login';
 import Register from './view/Register';
+import GameWindow from './view/GameWindow';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<LandingPage />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
+        <Route path='/gamewindow' element={<GameWindow />} />
       </Routes>
     </BrowserRouter>
     </>
