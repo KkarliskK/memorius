@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import css from '../style/GameWindow.module.css';
 import Card from '../components/Card.jsx';
 import Data from '../components/DataLanguages.js';
+import backgroundMusic from '../assets/background_music.mp3';
 
 //https://sfxr.me/  <-- sound generator
 
@@ -24,7 +25,7 @@ function GameWindow() {
 
     function NewGame() { 
         setTimeout(() => { 
-            const randomOrderArray = Data.slice(0, (level + 4) * 2).sort(() => 0.5 - Math.random()); // Slice the Data array to get 'level + 5' pairs
+            const randomOrderArray = Data.slice(0, (level + 4) * 2).sort(() => 0.5 - Math.random()); 
             setCardsArray(randomOrderArray); 
             setMoves(0); 
             setFirstCard(null); 
@@ -90,7 +91,7 @@ function GameWindow() {
       useEffect(() => {
           if (timer === 0) {
             setScore(timer * 4); //jo vairak laika palicis uz taimera, jo lielaks score. 4 - koeficients
-            setCoins(score * 0.5); // jo lielaks score, jo lielaku naudu nopelni, 0.5 = /2, vnk lai nevar tik atri nopelnit naudu
+            setCoins(score * 0.3); // jo lielaks score, jo lielaku naudu nopelni, 0.3, vnk lai nevar tik atri nopelnit naudu
             setLostGame(true);  
           }
       }, [timer]);
@@ -99,11 +100,12 @@ function GameWindow() {
         if (cardsArray.length > 0 && won === cardsArray.length / 2) {
             clearInterval(timerId.current); 
             setScore(4 * timer); 
-            setCoins(4 * timer * 0.5); 
+            setCoins(Math.round(4 * timer * 0.3));
             setTotalScore(totalScore + 4 * timer);
             setGameOver(true); 
         }
     }, [won, cardsArray]);
+    
   
       //winning screen
       function winningScreen() {
@@ -182,8 +184,16 @@ function GameWindow() {
         NewGame(); 
     }, []); 
 
+
+    window.addEventListener("DOMContentLoaded", event => {
+        const audio = document.querySelector("audio");
+        audio.volume = 0.8;
+        audio.play();
+      });
+
   return (
     <>
+    <audio src={backgroundMusic}></audio>    
        <div className={`w-full h-screen flex items-center flex-col ${css.mainScreen}`}>
             <div className={`${css.gameScreenHead} w-full flex justify-center items-center h-32 m-3`}>
                 <h1 className={`${css.levelH1} font-bold text-xl m-2`}>Level: {level}</h1> 
