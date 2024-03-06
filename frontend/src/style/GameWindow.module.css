@@ -9,6 +9,7 @@
 
 .face { 
     height: 6rem; 
+    
 } 
   
 .back { 
@@ -21,18 +22,18 @@
 .item .face { 
     position: absolute; 
     transform: rotateY(90deg); 
-    transition: all ease-in 0.25s; 
+    transition: all ease-in 0.20s; 
   
 } 
   
 .toggled .face { 
     transform: rotateY(0deg); 
-    transition-delay: 0.25s; 
+    transition-delay: 0.20s; 
 } 
   
 .item .back { 
-    transition: all ease-in 0.25s; 
-    transition-delay: 0.25s; 
+    transition: all ease-in 0.20s; 
+    transition-delay: 0.20s; 
 } 
   
 .toggled .back { 

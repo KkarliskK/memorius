@@ -3,6 +3,8 @@ import css from '../style/GameWindow.module.css';
 import Card from '../components/Card.jsx';
 import Data from '../components/DataLanguages.js';
 
+//https://sfxr.me/  <-- sound generator
+
 function GameWindow() {
     const [cardsArray, setCardsArray] = useState([]);  
     const [timer, setTimer] = useState(60);
@@ -15,7 +17,6 @@ function GameWindow() {
     const [gameOver, setGameOver] = useState(false); //when winning
     const [lostGame, setLostGame] = useState(false); //when loosing
     const [score, setScore] = useState(0);
-    const [newScore, setNewScore] = useState(0); // kad pariet uz limeni lai saglabatu score
     const [totalScore, setTotalScore] = useState(0); // kopejais score par visiem limeniem
     const [highScore, setHighScore] = useState(0); // augstakais rezultats
     const [coins, setCoins] = useState(0);
@@ -23,7 +24,7 @@ function GameWindow() {
 
     function NewGame() { 
         setTimeout(() => { 
-            const randomOrderArray = Data.sort(() => 0.5 - Math.random()); 
+            const randomOrderArray = Data.slice(0, (level + 4) * 2).sort(() => 0.5 - Math.random()); // Slice the Data array to get 'level + 5' pairs
             setCardsArray(randomOrderArray); 
             setMoves(0); 
             setFirstCard(null); 
@@ -36,22 +37,29 @@ function GameWindow() {
             setCoins(0);
         }, 1200); 
     }
+    
 
     function nextLevel(){
-      setTotalScore(totalScore + score);
-      setTimeout(() => {
-        const randomOrderArray = Data.sort(() => 0.5 - Math.random());
-          setCardsArray(randomOrderArray);
-          setMoves(0);
-          setFirstCard(null); 
-          setSecondCard(null); 
-          setTimer(60);
-          setGameOver(false);
-          setLostGame(false);
-          setWon(0); 
-          setCoins(0);
-        }, 1200); 
+        setLevel(prevLevel => {
+            const newLevel = prevLevel + 1; // Increase the level
+            setTotalScore(totalScore + score);
+            setTimeout(() => {
+                const randomOrderArray = Data.slice(0, (newLevel + 4) * 2).sort(() => 0.5 - Math.random()); // Slice the Data array based on the new level
+                setCardsArray(randomOrderArray);
+                setMoves(0);
+                setFirstCard(null); 
+                setSecondCard(null); 
+                setTimer(60);
+                setGameOver(false);
+                setLostGame(false);
+                setWon(0); 
+                setCoins(0);
+            }, 1200);
+            return newLevel;
+        });
     }
+    
+    
   
     //funkcija kas saglaba nospiesto pirmo karti un otro karti
     function handleSelectedCards(item) { 
@@ -88,15 +96,14 @@ function GameWindow() {
       }, [timer]);
   
       useEffect(() => {
-        if (won === Data.length / 2) {
-          clearInterval(timerId.current); // Use .current to access the timerId
-          setScore(4 * timer); //jo vairak laika palicis uz taimera, jo lielaks score. 4 - koeficients
-          setCoins(4 * timer * 0.5); // jo lielaks score, jo lielaku naudu nopelni, 0.5 = /2, vnk lai nevar tik atri nopelnit naudu
-          setTotalScore(totalScore + 4 * timer);
-          setGameOver(true); // Display the winning screen
-            
+        if (cardsArray.length > 0 && won === cardsArray.length / 2) {
+            clearInterval(timerId.current); 
+            setScore(4 * timer); 
+            setCoins(4 * timer * 0.5); 
+            setTotalScore(totalScore + 4 * timer);
+            setGameOver(true); 
         }
-      }, [won]);
+    }, [won, cardsArray]);
   
       //winning screen
       function winningScreen() {
