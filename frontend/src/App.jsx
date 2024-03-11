@@ -7,6 +7,7 @@ import Register from './view/Register';
 import GameWindow from './view/GameWindow';
 import Leaderboard from './view/Leaderboard';
 import Profile from './view/Profile';
+import Error404 from './view/Error404';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/gamewindow' element={<GameWindow />} />
         <Route path='/leaderboard' element={<Leaderboard />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='*' element={<Error404 />} />
       </Routes>
     </BrowserRouter>
     </>

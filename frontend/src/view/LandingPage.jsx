@@ -16,7 +16,7 @@ function LandingPage() {
             </h1>
             <p className={`${css.p}`}>A simple card memory game. 
                 Flip the cards and try to match two to gain score. 
-                Beat highscores in <a className={`text-teal-300`} href='/leaderboard'>leaderboard</a>.
+                Beat highscores in <Link className={`text-teal-300`} to='/leaderboard'>leaderboard</Link>.
                 Buy custom cards and themes in the shop with coins.
                 You can earn coins by completing levels! 
                 And a lot more, Start Now!
