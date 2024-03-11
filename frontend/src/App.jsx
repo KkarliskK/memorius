@@ -5,6 +5,8 @@ import Header from './components/Header';
 import Login from './view/Login';
 import Register from './view/Register';
 import GameWindow from './view/GameWindow';
+import Leaderboard from './view/Leaderboard';
+import Profile from './view/Profile';
 
 function App() {
 
@@ -17,6 +19,8 @@ function App() {
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
         <Route path='/gamewindow' element={<GameWindow />} />
+        <Route path='/leaderboard' element={<Leaderboard />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </BrowserRouter>
     </>

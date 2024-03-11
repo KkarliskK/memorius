@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import css from '../style/GameWindow.module.css';
 import Card from '../components/Card.jsx';
-import Data from '../components/DataLanguages.js';
+import Data from '../components/DataCar.js';
 import backgroundMusic from '../assets/background_music.mp3';
 
 //https://sfxr.me/  <-- sound generator
@@ -36,7 +36,7 @@ function GameWindow() {
             setWon(0); 
             setScore(0);
             setCoins(0);
-        }, 1200); 
+        }, 1000); 
     }
     
 
@@ -55,7 +55,7 @@ function GameWindow() {
                 setLostGame(false);
                 setWon(0); 
                 setCoins(0);
-            }, 1200);
+            }, 1000);
             return newLevel;
         });
     }
@@ -157,7 +157,7 @@ function GameWindow() {
             } else { 
                 setTimeout(() => { 
                     removeSelection(); 
-                }, 1000); 
+                }, 500); 
             } 
         } 
     }, [firstCard, secondCard]); 
@@ -189,7 +189,7 @@ function GameWindow() {
         const audio = document.querySelector("audio");
         audio.volume = 0.8;
         audio.play();
-      });
+      }); 
 
   return (
     <>

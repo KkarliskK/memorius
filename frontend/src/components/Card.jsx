@@ -1,5 +1,5 @@
 import css from '../style/GameWindow.module.css';
-import cardBack from '../assets/cardBack.png';
+import cardBack from '../assets/logo.png';
 import audio from '../assets/card_flip.mp3';
 
 let sweep = new Audio(audio);
@@ -19,7 +19,7 @@ function Card({ item, handleSelectedCards, toggled, stopflip }) {
                     className={`${css.back} flex justify-center items-center rounded`}
                     onClick={() => !stopflip && handleSelectedCards(item)}
                 >
-                    <img draggable="false" src={cardBack} alt="back" />
+                    <img draggable="false" className={`w-5/6`} src={cardBack} alt="back" />
                 </div>
             </div>
         </div>
