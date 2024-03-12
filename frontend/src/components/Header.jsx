@@ -33,8 +33,8 @@ function Header() {
                 </Link>
             </div>
             <div className={`flex justify-center items-center p-0 flex w-1/3 ${css.headerElement}`}>
-                <Link to='/#'>
-                    Coming soon
+                <Link to='/settings'>
+                    Settings
                 </Link>
             </div>
         </div>

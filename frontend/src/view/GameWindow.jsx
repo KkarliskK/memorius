@@ -3,6 +3,7 @@ import css from '../style/GameWindow.module.css';
 import Card from '../components/Card.jsx';
 import Data from '../components/DataCar.js';
 import backgroundMusic from '../assets/background_music.mp3';
+import { SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react';
 
 //https://sfxr.me/  <-- sound generator
 
@@ -22,10 +23,20 @@ function GameWindow() {
     const [highScore, setHighScore] = useState(0); // augstakais rezultats
     const [coins, setCoins] = useState(0);
     const timerId = useRef(); 
+    const [isPlaying, setIsPlaying] = useState(true);
+    const audioRef = useRef(null);
+
+    const togglePlay = () => {
+        setIsPlaying(!isPlaying);
+        if (audioRef.current) {
+          audioRef.current.muted = !audioRef.current.muted;
+        }
+      };
+    
 
     function NewGame() { 
         setTimeout(() => { 
-            const randomOrderArray = Data.slice(0, (level + 4) * 2).sort(() => 0.5 - Math.random()); 
+            const randomOrderArray = Data.slice(0, 5 * 2).sort(() => 0.5 - Math.random()); // Reset the array size to level 1
             setCardsArray(randomOrderArray); 
             setMoves(0); 
             setFirstCard(null); 
@@ -36,16 +47,18 @@ function GameWindow() {
             setWon(0); 
             setScore(0);
             setCoins(0);
+            setLevel(1); // Reset the level back to 1
         }, 1000); 
     }
+    
     
 
     function nextLevel(){
         setLevel(prevLevel => {
             const newLevel = prevLevel + 1; // Increase the level
             setTotalScore(totalScore + score);
+            const randomOrderArray = Data.slice(0, (newLevel + 4) * 2).sort(() => 0.5 - Math.random()); // Slice the Data array based on the new level
             setTimeout(() => {
-                const randomOrderArray = Data.slice(0, (newLevel + 4) * 2).sort(() => 0.5 - Math.random()); // Slice the Data array based on the new level
                 setCardsArray(randomOrderArray);
                 setMoves(0);
                 setFirstCard(null); 
@@ -58,6 +71,22 @@ function GameWindow() {
             }, 1000);
             return newLevel;
         });
+    }
+    
+    function startNewLevel() {
+        setTimeout(() => { 
+            const randomOrderArray = Data.slice(0, (level + 5) * 2).sort(() => 0.5 - Math.random()); 
+            setCardsArray(randomOrderArray); 
+            setMoves(0); 
+            setFirstCard(null); 
+            setSecondCard(null); 
+            setTimer(60);
+            setGameOver(false);
+            setLostGame(false);
+            setWon(0); 
+            setScore(0);
+            setCoins(0);
+        }, 1000); 
     }
     
     
@@ -111,7 +140,7 @@ function GameWindow() {
       function winningScreen() {
         if (gameOver) {
             return (
-                <div className={`absolute top-52 p-4 flex justify-center items-center flex-col w-1/3 h-2/5 rounded-md text-center ${css.winningScreen}`}>
+                <div className={`absolute top-52 p-4 flex justify-center items-center flex-col w-1/3 h-2/5 rounded-md text-center bg-white shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] ${css.winningScreen}`}>
                     <h1 className={`text-3xl m-2`}>Congratulations! You won in {moves} moves!</h1>
                     <p className={`text-xl m-2`}>Your score: {score}</p>
                     <p className={`text-xl m-2`}>Your total score: {totalScore}</p>
@@ -127,7 +156,7 @@ function GameWindow() {
     function lostGameScreen(){
       if (lostGame) {
         return (
-          <div className={`absolute top-52 p-4 flex justify-center items-center flex-col w-1/3 h-2/5 rounded-md text-center ${css.winningScreen}`}>
+          <div className={`absolute top-52 p-4 flex justify-center items-center flex-col w-1/3 h-2/5 rounded-md text-center bg-white shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] ${css.winningScreen}`}>
                 <h1 className={`text-3xl m-2`}>Level Failed!</h1>
                 <p className={`text-xl m-2`}>Your total score: {totalScore}</p>
                 <p className={`text-xl m-2`}>Your time: {60 - timer} seconds</p>
@@ -172,28 +201,21 @@ function GameWindow() {
 
     //when clicked next level button
     function nextLevel() {
-      setLevel(level + 1);
-      NewGame();
+        setLevel(level + 1);
+        startNewLevel();
     }
-
+    
     function newGame(){
-      NewGame();
+        NewGame();
     }
- 
+    
     useEffect(() => { 
         NewGame(); 
     }, []); 
 
-
-    window.addEventListener("DOMContentLoaded", event => {
-        const audio = document.querySelector("audio");
-        audio.volume = 0.8;
-        audio.play();
-      }); 
-
   return (
     <>
-    <audio src={backgroundMusic}></audio>    
+    <audio ref={audioRef} src={backgroundMusic} autoPlay loop></audio>
        <div className={`w-full h-screen flex items-center flex-col ${css.mainScreen}`}>
             <div className={`${css.gameScreenHead} w-full flex justify-center items-center h-32 m-3`}>
                 <h1 className={`${css.levelH1} font-bold text-xl m-2`}>Level: {level}</h1> 
@@ -210,10 +232,13 @@ function GameWindow() {
             <button className={`${css.newGame} p-3 m-3`} onClick={NewGame}> 
                 <p className={`${css.nextLevelText}`}>New Game</p> 
             </button> 
+            <button onClick={togglePlay}>
+                {isPlaying ?  <SpeakerHigh size={32} />: <SpeakerSlash size={32} />}
+            </button>
             </div>
             {winningScreen()}
             {lostGameScreen()}
-            <div className={`${css.gameWindow}`}> 
+            <div className={`bg-white p-6 rounded shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] ${css.gameWindow}`}> 
                 { 
                   cardsArray.map((item) => ( 
                       <Card 

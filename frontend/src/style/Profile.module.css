@@ -1,0 +1,14 @@
+.pfp{
+    width: 200px;
+    height: 200px;
+}
+
+.profileContainer{
+    background-color: rgba(255, 255, 255, 0.9);
+    height: 55vh;
+}
+
+.aboutContainer{
+    background-color: rgba(255, 255, 255, 0.9);
+    height: 55vh;
+}

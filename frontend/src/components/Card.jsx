@@ -1,13 +1,12 @@
 import css from '../style/GameWindow.module.css';
 import cardBack from '../assets/logo.png';
-import audio from '../assets/card_flip.mp3';
-
-let sweep = new Audio(audio);
+import audioSrc from '../assets/card_flip.mp3';
 
 function Card({ item, handleSelectedCards, toggled, stopflip }) {
     const start = () => {
         if (!toggled && !stopflip) {
-            sweep.play();
+            let audio = new Audio(audioSrc);
+            audio.play();
         }
     };
 
