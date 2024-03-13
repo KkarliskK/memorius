@@ -7,10 +7,10 @@ import { Crown, Medal, Tag } from "@phosphor-icons/react";
 function Profile() {
     return (
         <>
-            <img className={`absolute w-11/12 bottom-0 left-0 h-3/6 z-10 `} src={wave1} />
+            <img className={`absolute w-4/5 bottom-0 left-0 h-2/6 z-10 `} src={wave1} />
             <div className={`relative w-full h-5/6 flex items-center justify-center ${css.mainScreen}`}> 
                 <img className={`absolute w-4/5 top-0 right-0 rotate-180 ${css.wave2}`} src={wave2} />
-                <div className={`flex w-9/12 flex-col m-4 p-3 rounded shadow-lg justify-center items-center ${css.profileContainer}`}>
+                <div className={`flex w-7/12 min-h-96 flex-col m-4 p-3 rounded shadow-lg justify-center items-center z-10 ${css.profileContainer}`}>
                     <div className={`flex w-full p-3 justify-center items-center flex-col ${css.pfpContainer}`}>
                         <img src={pfp} className={`${css.pfp}`} />
                         <h2 className={`text-3xl m-3`}>Admin</h2>

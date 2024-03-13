@@ -36,7 +36,7 @@ function GameWindow() {
 
     function NewGame() { 
         setTimeout(() => { 
-            const randomOrderArray = Data.slice(0, 5 * 2).sort(() => 0.5 - Math.random()); // Reset the array size to level 1
+            const randomOrderArray = Data.slice(0, 2 * 2).sort(() => 0.5 - Math.random()); // Reset the array size to level 1
             setCardsArray(randomOrderArray); 
             setMoves(0); 
             setFirstCard(null); 
@@ -75,7 +75,7 @@ function GameWindow() {
     
     function startNewLevel() {
         setTimeout(() => { 
-            const randomOrderArray = Data.slice(0, (level + 5) * 2).sort(() => 0.5 - Math.random()); 
+            const randomOrderArray = Data.slice(0, (level + 3) * 2).sort(() => 0.5 - Math.random()); 
             setCardsArray(randomOrderArray); 
             setMoves(0); 
             setFirstCard(null); 
@@ -238,7 +238,7 @@ function GameWindow() {
             </div>
             {winningScreen()}
             {lostGameScreen()}
-            <div className={`bg-white p-6 rounded shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] ${css.gameWindow}`}> 
+            <div className={`bg-white rounded shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] ${css.gameWindow}`}> 
                 { 
                   cardsArray.map((item) => ( 
                       <Card 
