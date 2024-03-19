@@ -20,10 +20,10 @@ function App() {
         <Route path="/" element={<LandingPage />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
-        <Route path='/gamewindow' element={<GameWindow />} />
+        <Route path='/gamewindow' element={<GameWindow />} /> 
         <Route path='/leaderboard' element={<Leaderboard />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/settings' element={<Settings />} />
+        <Route path='/:username' element={<Profile />} /> 
+        <Route path='/settings' element={<Settings />} /> 
         <Route path='*' element={<Error404 />} />
       </Routes>
     </BrowserRouter>

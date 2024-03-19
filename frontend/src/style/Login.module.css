@@ -110,3 +110,7 @@
     50%{background-position:right}
     100%{background-position:left}
   }
+
+  .error{
+    color: red;
+  }

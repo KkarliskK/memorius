@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import wave1 from '../assets/wave1.png';
 import wave2 from '../assets/wave2.png';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 function Register() {
 
@@ -33,6 +35,11 @@ function Register() {
     } else {
         setPasswordError(false);
     }
+    if (name == undefined || name == ""){
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
     if (username == undefined || username == ""){
         setUsernameError(true);
     } else {
@@ -53,6 +60,11 @@ function Register() {
     } else {
         setRepeatPasswordError(false);
     }
+    if (repeatPass !== password){
+      setRepeatPassError(true);
+    } else {
+      setRepeatPassError(false);
+    }
     if(nameError && usernameError && passwordError && repeatPassError && mobileError){
       return;
     }
@@ -66,6 +78,7 @@ function Register() {
       })
       .then(function (response) {
         Cookies.set('token', response.data.token);
+        Cookies.set('username', username);
         navigate('/');
       })
       .catch(function (error){
@@ -86,7 +99,7 @@ function Register() {
             <form className={`flex flex-col justify-center items-center ${css.signupForm}`} onSubmit={register}>
               <div className={`flex justify-center ${css.signupSplit}`}>
                 <div className={`flex flex-col m-2 ${css.inputBox}`}>
-                  <label for='name'>Enter name:</label>
+                  <label htmlFor='name'>Enter name:</label>
                   <input  
                     type='text'
                     id='name'
@@ -98,7 +111,7 @@ function Register() {
                   {nameError && <p className={css.error}>Name can't be empty.</p>}
                 </div>
                 <div className={`flex flex-col m-2 ${css.inputBox}`}>
-                  <label for='username'>Enter username:</label>
+                  <label htmlFor='username'>Enter username:</label>
                   <input 
                     type='text'
                     id='username'
@@ -112,7 +125,7 @@ function Register() {
               </div>
               <div className={`flex justify-center ${css.signupSplit}`}>
                 <div className={`flex flex-col m-2 ${css.inputBox}`}>
-                  <label for='email'>Enter email:</label>
+                  <label htmlFor='email'>Enter email:</label>
                   <input 
                     type='text'
                     id='email'
@@ -124,7 +137,7 @@ function Register() {
                   {emailError && <p className={css.error}>Email can't be empty.</p>}
                 </div>
                 <div className={`flex flex-col m-2 ${css.inputBox}`}>
-                  <label for='mobile'>Enter phone number:</label>
+                  <label htmlFor='mobile'>Enter phone number:</label>
                   <input 
                     type='number'
                     id='mobile'
@@ -138,7 +151,7 @@ function Register() {
               </div>
               <div className={`flex justify-center ${css.signupSplit}`}>
                 <div className={`flex flex-col m-2 ${css.inputBox}`}>
-                  <label for='password'>Enter password:</label>
+                  <label htmlFor='password'>Enter password:</label>
                   <input 
                     type='password'
                     id='password'
@@ -150,7 +163,7 @@ function Register() {
                   {passwordError && <p className={css.error}>Password can't be empty.</p>}
                 </div>
                 <div className={`flex flex-col m-2 ${css.inputBox}`}>
-                  <label for='repeatPassword'>Repeat password:</label>
+                  <label htmlFor='repeatPassword'>Repeat password:</label>
                   <input 
                     type='password'
                     id='repeatPassword'
@@ -162,7 +175,7 @@ function Register() {
                   {repeatPasswordError && <p className={css.error}>Repeat password field can't be empty.</p>}
                 </div>
               </div>
-              {repeatPassError && <p className={css.error}>Passwords must match!</p>}
+              {repeatPassError && <p className={css.error}>Passwords does not match!</p>}
               <button className={`p-1 m-3 ${css.signupButton}`}><p className={`${css.signupButtonText}`}>Sign Up</p></button>
             </form>
             <div className={`p-1 m-2 flex justify-center items-center ${css.signupFooter}`}>

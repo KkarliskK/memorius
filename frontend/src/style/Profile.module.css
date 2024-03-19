@@ -1,14 +1,36 @@
 .pfp{
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }
 
 .profileContainer{
     background-color: rgba(255, 255, 255, 0.9);
-    height: 55vh;
+    min-height: 65vh;
 }
 
 .aboutContainer{
     background-color: rgba(255, 255, 255, 0.9);
     height: 55vh;
+}
+
+.errorScreen{
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+
+.returnButton{
+    background: white;
+    border: none;
+    border-radius: 15px;
+    color: black;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 22px;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);
+    transition: all ease-in-out .25s;
+}
+
+.returnButton:hover{
+    box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
 }

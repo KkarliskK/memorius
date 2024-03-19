@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +84,16 @@ class AuthController extends Controller
         $token = $user->createToken('Personal Access Token');
         return ['token' => $token->plainTextToken];
     }
+
+
+
+    function select(Request $request, User $user, $username)
+    {
+        $user = User::where('username', $username)->first();
+    
+        return response()->json($user);
+    }
+    
 
 }
 

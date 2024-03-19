@@ -48,6 +48,7 @@ function Login() {
       })
       .then(function (response) {
         Cookies.set('token', response.data.token);
+        Cookies.set('username', username);
         navigate('/');
       })
       .catch(function (error){
