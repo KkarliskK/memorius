@@ -18,12 +18,6 @@ return new class extends Migration
             $table->foreignId('tag_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
-
-        //adding values in the table
-        DB::table('tag_user')->insert([
-            'user_id' => '1',
-            'tag_id' => '1',
-        ]);
     }
 
     /**

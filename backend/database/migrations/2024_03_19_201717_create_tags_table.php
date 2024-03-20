@@ -20,8 +20,15 @@ return new class extends Migration
 
         //adding values in the table
         DB::table('tags')->insert([
-            'tag' => 'Speedrunner',
+            ['tag' => 'Speedrunner'],
+            ['tag' => 'Early Supporter'],
+            ['tag' => 'MVP'],
+            ['tag' => 'Tryhard'],
+            ['tag' => 'On Fire'],
+            ['tag' => 'Admin'],
+            // Add more rows as needed
         ]);
+        
     }
 
     /**

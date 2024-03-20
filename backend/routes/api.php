@@ -25,3 +25,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/status', [AuthController::class, 'status']);
 Route::get('/user/{username}', [AuthController::class, 'select']);
 
+// Password Reset Routes
+Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::post('/password/reset', [AuthController::class, 'reset'])->name('password.reset');

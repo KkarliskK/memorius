@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('mobile')->unique();
             $table->string('bio')->nullable();
-            $table->string('tag')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('pfp')->nullable();
@@ -31,15 +30,25 @@ return new class extends Migration
 
         //adding values in the table
         DB::table('users')->insert([
-            'name' => 'admin',
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'mobile' => '12345678',
-            'bio' => 'I am admin.. I see everything! Also, try to beat me!',
-            'tag' => 'Speedrunner',
-            'password' => Hash::make('password'),
-            'pfp' => 'https://pbs.twimg.com/media/F9PJtQdbwAAyIf7?format=jpg&name=large',
-            // Add other fields as necessary...
+            [
+                'name' => 'admin',
+                'username' => 'admin',
+                'email' => 'admin@example.com',
+                'mobile' => '12345678',
+                'bio' => 'I am admin.. I see everything! Also, try to beat me!',
+                'password' => Hash::make('password'),
+                'pfp' => 'https://pbs.twimg.com/media/F9PJtQdbwAAyIf7?format=jpg&name=large'
+            ],
+            [
+                'name' => 'karlis',
+                'username' => 'kkarliskk',
+                'email' => 'karlis@example.com',
+                'mobile' => '22345678',
+                'bio' => 'I am nobody..',
+                'password' => Hash::make('password'),
+                'pfp' => 'https://pbs.twimg.com/media/F9PJtQdbwAAyIf7?format=jpg&name=large'
+            ],
+            // Add more user accounts as needed...
         ]);
     }
 

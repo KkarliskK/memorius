@@ -34,7 +34,7 @@ function Header() {
         {isLoggedIn && (
           <>
             <div className={`flex justify-center items-center p-0 flex w-1/3 ${css.headerElement}`}>
-              <Link to={`/${username}`}>
+              <Link to={`/profile/${username}`}>
                 Profile
               </Link>
             </div>
