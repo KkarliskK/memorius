@@ -13,10 +13,6 @@ function Header() {
         setIsLoggedIn(Boolean(Cookies.get('token')));
     }, [Cookies.get('token')]);
 
-    const handleLogout = () => {
-        Cookies.remove('token');
-        setIsLoggedIn(false);
-    };
 
   return (
     <>
@@ -44,6 +40,11 @@ function Header() {
               </Link>
             </div>
             <div className={`flex justify-center items-center p-0 flex w-1/3 ${css.headerElement}`}>
+              <Link to='/gamewindow'>
+                Play Now
+              </Link>
+            </div>
+            <div className={`flex justify-center items-center p-0 flex w-1/3 ${css.headerElement}`}>
               <Link to='/settings'>
                 Settings
               </Link>
@@ -52,9 +53,9 @@ function Header() {
         )}
         <div className={`flex justify-center items-center p-0 flex w-1/3 ${css.headerElement}`}>
           {isLoggedIn ? (
-            <button onClick={handleLogout}>
+            <Link to='/signout' >
               Sign Out
-            </button>
+            </Link>
           ) : (
             <Link to='/login'>
               Sign In

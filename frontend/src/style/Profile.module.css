@@ -34,3 +34,35 @@
 .returnButton:hover{
     box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
 }
+
+.cancelButton{
+    background: black;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);
+    transition: all ease-in-out .25s;
+}
+
+.cancelButton:hover{
+    box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
+}
+
+.signOutButton{
+    background: rgba(233, 66, 66, 0.9);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);
+    transition: all ease-in-out .25s;
+}
+
+.signOutButton:hover{
+    box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
+}

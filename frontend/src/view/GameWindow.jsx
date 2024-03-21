@@ -17,13 +17,14 @@ function GameWindow() {
     const [won, setWon] = useState(0); 
     const [level, setLevel] = useState(1);
     const [gameOver, setGameOver] = useState(false); //when winning
-    const [lostGame, setLostGame] = useState(false); //when loosing
+    const [lostGame, setLostGame] = useState(false); //when losing
     const [score, setScore] = useState(0);
-    const [totalScore, setTotalScore] = useState(0); // kopejais score par visiem limeniem
-    const [highScore, setHighScore] = useState(0); // augstakais rezultats
+    const [totalScore, setTotalScore] = useState(0); // total score for all levels
     const [coins, setCoins] = useState(0);
-    const timerId = useRef(); 
     const [isPlaying, setIsPlaying] = useState(true);
+    const [nextLevelClicked, setNextLevelClicked] = useState(false); // Track if next level button is clicked
+
+    const timerId = useRef(); 
     const audioRef = useRef(null);
 
     const togglePlay = () => {
@@ -31,109 +32,144 @@ function GameWindow() {
         if (audioRef.current) {
           audioRef.current.muted = !audioRef.current.muted;
         }
-      };
-    
+    };
 
-    function NewGame() { 
-        setTimeout(() => { 
-            const randomOrderArray = Data.slice(0, 2 * 2).sort(() => 0.5 - Math.random()); // Reset the array size to level 1
-            setCardsArray(randomOrderArray); 
-            setMoves(0); 
-            setFirstCard(null); 
-            setSecondCard(null); 
-            setTimer(60);
-            setGameOver(false);
-            setLostGame(false);
-            setWon(0); 
-            setScore(0);
-            setCoins(0);
-            setLevel(1); // Reset the level back to 1
-        }, 1000); 
+    function NewGame() {
+        clearInterval(timerId.current);
+        setNextLevelClicked(false); // Reset next level click state
+        // Reset all game state variables
+        setCardsArray([]);
+        setMoves(0);
+        setFirstCard(null);
+        setSecondCard(null);
+        setTimer(60);
+        setGameOver(false);
+        setLostGame(false);
+        setWon(0);
+        setScore(0);
+        setCoins(0);
+        setLevel(1);
+        setTotalScore(0); // Reset total score
+        startNewLevel();
     }
-    
-    
 
-    function nextLevel(){
-        setLevel(prevLevel => {
-            const newLevel = prevLevel + 1; // Increase the level
-            setTotalScore(totalScore + score);
-            const randomOrderArray = Data.slice(0, (newLevel + 4) * 2).sort(() => 0.5 - Math.random()); // Slice the Data array based on the new level
-            setTimeout(() => {
-                setCardsArray(randomOrderArray);
-                setMoves(0);
-                setFirstCard(null); 
-                setSecondCard(null); 
-                setTimer(60);
-                setGameOver(false);
-                setLostGame(false);
-                setWon(0); 
-                setCoins(0);
-            }, 1000);
-            return newLevel;
-        });
+
+    function nextLevel() {
+        // Disable next level button to prevent spamming
+        setNextLevelClicked(true);
+        setLevel(level + 1);
+        startNewLevel();
     }
-    
+
     function startNewLevel() {
-        setTimeout(() => { 
-            const randomOrderArray = Data.slice(0, (level + 3) * 2).sort(() => 0.5 - Math.random()); 
-            setCardsArray(randomOrderArray); 
-            setMoves(0); 
-            setFirstCard(null); 
-            setSecondCard(null); 
-            setTimer(60);
-            setGameOver(false);
-            setLostGame(false);
-            setWon(0); 
+        const maxCards = 20;
+        const maxTimer = 160;
+    
+        let cardsPerRow;
+        let timerValue;
+    
+        if (level === 1) {
+            // For the first level, start with 4 cards and 160 seconds
+            cardsPerRow = 2;
+            timerValue = 160;
+        } else {
+            // For subsequent levels, adjust based on level number
+            if (level % 2 === 0) {
+                cardsPerRow = 4 + Math.floor((level - 2) / 2);
+                timerValue = maxTimer - (level - 2) * 5;
+            } else {
+                cardsPerRow = 4 + Math.floor((level - 3) / 2);
+                timerValue = maxTimer - (level - 3) * 5;
+            }
+        }
+    
+        // Ensure the number of cards doesn't exceed the maximum
+        cardsPerRow = Math.min(cardsPerRow, Math.floor(maxCards / 2)); // Divide by 2 because each card has a pair
+        // Ensure the timer value doesn't go below 0
+        timerValue = Math.max(timerValue, 0);
+    
+        const totalCards = cardsPerRow * 2; // Since each row has 2 cards
+        const randomOrderArray = Data.slice(0, totalCards).sort(() => 0.5 - Math.random());
+    
+        setCardsArray(randomOrderArray);
+        setMoves(0);
+        setFirstCard(null);
+        setSecondCard(null);
+        setTimer(timerValue); // Start timer only when the first card is interacted with
+        setGameOver(false);
+        setLostGame(false);
+        setWon(0);
+        setScore(0);
+        setCoins(0);
+    }
+
+
+
+
+    function startCountdown() {
+        timerId.current = setInterval(() => {
+            setTimer((prevTimer) => {
+                if (prevTimer <= 1) {
+                    clearInterval(timerId.current);
+                    return 0;
+                }
+                return prevTimer - 1;
+            });
+        }, 1000);
+    }
+
+
+    const [levelScore, setLevelScore] = useState(0);
+    
+    useEffect(() => {
+        if (timer === 0) {
+            // Set score to 0 when timer runs out
             setScore(0);
             setCoins(0);
-        }, 1000); 
-    }
+            setLostGame(true);
+            clearInterval(timerId.current);
+        } else if (cardsArray.length > 0 && won === cardsArray.length / 2) {
+            // Calculate the level score when the level is completed
+            const baseScore = 1000; // Base score for completing a level
+            const scorePerSecond = 10; // Score awarded per remaining second
+            const remainingTime = 160 - timer; // Calculate remaining time (160 is the maximum time)
+            const levelScore = baseScore + remainingTime * scorePerSecond; // Calculate the level score
     
+            // Update the total score
+            setTotalScore((prevTotalScore) => prevTotalScore + levelScore);
+    
+            // Set the level score and other relevant states
+            setScore(levelScore);
+            setCoins(Math.round(levelScore * 0.3)); // Calculate coins earned based on the level score
+            setGameOver(true);
+            clearInterval(timerId.current);
+        }
+        // Clear the interval when the game is over
+        if (gameOver) {
+            clearInterval(timerId.current);
+        }
+
+        // Start countdown if the timer is not running and a first card is selected
+        if (firstCard && !timerId.current && timer === 60) {
+            startCountdown();
+        }
+    }, [timer, won, cardsArray, gameOver, firstCard]);
     
   
     //funkcija kas saglaba nospiesto pirmo karti un otro karti
-    function handleSelectedCards(item) { 
-      console.log(typeof item); 
-      if (firstCard !== null && firstCard.id !== item.id) { 
-          setSecondCard(item); 
-      } else { 
-          setFirstCard(item); 
-          // Start the countdown when the first card is clicked
-          if (firstCard === null && timer === 60) {
-              startCountdown();
-          }
-      } 
-    } 
-  
-    function startCountdown() {
-      timerId.current = setInterval(() => { // Use .current to access the timerId
-          setTimer((prevTimer) => {
-              if (prevTimer <= 1) {
-                  clearInterval(timerId.current); // Use .current to access the timerId
-                  return 0;
-              }
-              return prevTimer - 1;
-          });
-      }, 1000);
-    }
-      
-      useEffect(() => {
-          if (timer === 0) {
-            setScore(timer * 4); //jo vairak laika palicis uz taimera, jo lielaks score. 4 - koeficients
-            setCoins(score * 0.3); // jo lielaks score, jo lielaku naudu nopelni, 0.3, vnk lai nevar tik atri nopelnit naudu
-            setLostGame(true);  
-          }
-      }, [timer]);
-  
-      useEffect(() => {
-        if (cardsArray.length > 0 && won === cardsArray.length / 2) {
-            clearInterval(timerId.current); 
-            setScore(4 * timer); 
-            setCoins(Math.round(4 * timer * 0.3));
-            setTotalScore(totalScore + 4 * timer);
-            setGameOver(true); 
+    function handleSelectedCards(item) {
+        if (!gameOver) {
+            if (firstCard !== null && firstCard.id !== item.id) {
+                setSecondCard(item);
+            } else {
+                setFirstCard(item);
+                // Start the countdown when the first card is clicked
+                if (timer === 60) {
+                    startCountdown();
+                }
+            }
         }
-    }, [won, cardsArray]);
+    }
     
   
       //winning screen
@@ -168,50 +204,57 @@ function GameWindow() {
     }
 
     //parbauda vai nospiestas kartis sakrit vai ne, ja sakrit tad nonem iespeju vinas apgriezt apkart, ja nesakrit tad apgriež atpakaļ
-    useEffect(() => { 
-        if (firstCard && secondCard) { 
-            setStopFlip(true); 
-            if (firstCard.name === secondCard.name) { 
-                setCardsArray((prevArray) => { 
-                    return prevArray.map((unit) => { 
-                        if (unit.name === firstCard.name) { 
-                            return { ...unit, matched: true }; 
-                        } else { 
-                            return unit; 
-                        } 
-                    }); 
-                }); 
-                setWon((preVal) => preVal + 1); 
-                removeSelection(); 
-            } else { 
-                setTimeout(() => { 
-                    removeSelection(); 
-                }, 500); 
-            } 
-        } 
-    }, [firstCard, secondCard]); 
-  
-    //tad kad kartis nospiestas un nesakrit, notira pirmo un otro karšu datus saglabatos
-    function removeSelection() { 
-        setFirstCard(null); 
-        setSecondCard(null); 
-        setStopFlip(false); 
-        setMoves((prevValue) => prevValue + 1); 
-    } 
+    useEffect(() => {
+        if (firstCard && secondCard) {
+            setStopFlip(true);
+            if (firstCard.name === secondCard.name) {
+                setCardsArray((prevArray) => {
+                    return prevArray.map((unit) => {
+                        if (unit.name === firstCard.name) {
+                            return { ...unit, matched: true };
+                        } else {
+                            return unit;
+                        }
+                    });
+                });
+                setWon((preVal) => preVal + 1);
+                removeSelection();
+                // Check if both cards were matched on the first try
+                if (firstCard.firstTry && secondCard.firstTry) {
+                    // Award time and score bonus for combo
+                    setTimer((prevTimer) => prevTimer + 5); // Add 5 seconds to the timer
+                    setScore((prevScore) => prevScore + 10); // Add 10 points to the score
+                }
+            } else {
+                setTimeout(() => {
+                    removeSelection();
+                }, 500);
+            }
+        }
+    }, [firstCard, secondCard]);
+    
+    function removeSelection() {
+        setFirstCard(null);
+        setSecondCard(null);
+        setStopFlip(false);
+        setMoves((prevValue) => prevValue + 1);
+    }
 
     //when clicked next level button
     function nextLevel() {
         setLevel(level + 1);
+        setTotalScore(totalScore + levelScore); // Update total score only when moving to the next level
         startNewLevel();
     }
     
-    function newGame(){
-        NewGame();
+    function startNewGame() {
+        const updatedCardsArray = cardsArray.map(card => ({ ...card, firstTry: true }));
+        setCardsArray(updatedCardsArray);
     }
     
-    useEffect(() => { 
-        NewGame(); 
-    }, []); 
+    useEffect(() => {
+        NewGame();
+    }, []);
 
   return (
     <>
@@ -220,7 +263,7 @@ function GameWindow() {
             <div className={`${css.gameScreenHead} w-full flex justify-center items-center h-32 m-3`}>
                 <h1 className={`${css.levelH1} font-bold text-xl m-2`}>Level: {level}</h1> 
                 <p className={`${css.timer} font-semibold text-xl m-2`}>Timer: {timer}</p>
-                <p className={`${css.score} font-semibold text-xl m-2`}>Score: {score}</p> {/* Put score for each guessed card pair  That means make a score system first of all*/}
+                <p className={`${css.score} font-semibold text-xl m-2`}>Score: {totalScore}</p> {/* Put score for each guessed card pair  That means make a score system first of all*/}
 
                 {won !== 6 ? ( 
                 <div className={`${css.movesBox} text-xl m-2 font-semibold`}>Moves : {moves}</div> 
