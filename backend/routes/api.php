@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GameController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,3 +29,6 @@ Route::get('/user/{username}', [AuthController::class, 'select']);
 // Password Reset Routes
 Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::post('/password/reset', [AuthController::class, 'reset'])->name('password.reset');
+
+//game back-end routes
+Route::post('/level/completed', [GameController::class, 'update']);

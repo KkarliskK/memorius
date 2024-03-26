@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('coins')->nullable();
             $table->string('pfp')->nullable();
             $table->rememberToken();
             $table->timestamps();
@@ -37,6 +38,7 @@ return new class extends Migration
                 'mobile' => '12345678',
                 'bio' => 'I am admin.. I see everything! Also, try to beat me!',
                 'password' => Hash::make('password'),
+                'coins' => '1284920',
                 'pfp' => 'https://pbs.twimg.com/media/F9PJtQdbwAAyIf7?format=jpg&name=large'
             ],
             [
@@ -46,6 +48,7 @@ return new class extends Migration
                 'mobile' => '22345678',
                 'bio' => 'I am nobody..',
                 'password' => Hash::make('password'),
+                'coins' => '42069',
                 'pfp' => 'https://pbs.twimg.com/media/F9PJtQdbwAAyIf7?format=jpg&name=large'
             ],
             // Add more user accounts as needed...

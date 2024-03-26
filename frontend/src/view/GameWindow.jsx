@@ -3,6 +3,8 @@ import Card from '../components/Card.jsx';
 import css from '../style/GameWindow.module.css';
 import Data from '../components/DataCar.js';
 import { Eye, FastForward, Info, Question, Timer } from "@phosphor-icons/react";
+import axios from 'axios';
+
 
 function GameWindow() {
 
@@ -22,17 +24,31 @@ function GameWindow() {
     const [moves, setMoves] = useState(0);
     const [stopFlip, setStopFlip] = useState(false);
     const [score, setScore] = useState(0);
+    const [totalScore, setTotalScore] = useState(0);
+    const [coins, setCoins] = useState(0);
     const [won, setWon] = useState(false);
     const [matchedPairs, setMatchedPairs] = useState(0);
     const [timeLeft, setTimeLeft] = useState(60);
     const [timerStarted, setTimerStarted] = useState(false);
     const [initialTime, setInitialTime] = useState(60); 
 
+    const SCORE_PER_PAIR = 100; // Score earned per matched pair
+    const SCORE_PER_MOVE = 10;   // Score deduction per move
+    const COINS_PER_LEVEL = 50;   // Coins earned per completed level
+
+    
+    function calculateScore(movesMade, initialTime, timeLeft, matchedPairs) {
+        const timeBonus = Math.max(0, timeLeft) * 0;  //fix this later on
+        const movesPenalty = movesMade * SCORE_PER_MOVE;
+        const pairsScore = matchedPairs * SCORE_PER_PAIR;
+        return pairsScore - movesPenalty + timeBonus;
+    }
+
     useEffect(() => {
-        const initialTime = 60 - (level - 1) * 5; // Example: Subtract 5 seconds per level increase
+        const initialTime = 60 - (level - 1) * 5; 
         setTimeLeft(initialTime);
         setInitialTime(initialTime);
-        const numPairs = Math.min(level * 2, 20); // Adjust this logic for your levels
+        const numPairs = Math.min(level * 2, 20); 
         setTotalPairs(numPairs);
         generateCards(numPairs);
     }, [level]);
@@ -73,18 +89,20 @@ function GameWindow() {
 
 
     function nextLevel() {
-        if (level < 20) { // Assuming 20 levels
+        if (level < 20) { 
             setLevel(level + 1);
             setWon(false);
+            setMoves(0);
             setMatchedPairs(0);
             setTimeout(() => { 
-                const numPairs = Math.min((level + 1) * 2, 20); // Calculate the number of pairs for the next level
-                generateCards(numPairs); // Regenerate cards for the next level
+                const numPairs = Math.min((level + 1) * 2, 20); 
+                generateCards(numPairs); 
             }, 1000); 
         } else {
             // Handle game completion for reaching level 20
         }
     }
+    
 
 
     function handleSelectedCards(item) { 
@@ -134,6 +152,24 @@ function GameWindow() {
 
     useEffect(() => {
         if (matchedPairs === totalPairs) { //here it checks if all cards have been matched to setWin
+            const levelScore = calculateScore(moves, initialTime, timeLeft, matchedPairs);
+            const newTotalScore = totalScore + levelScore; // Accumulate the level score with the previous total score
+            setTotalScore(newTotalScore);
+            setCoins(COINS_PER_LEVEL);
+
+            axios.post('/level/completed', {
+                level: level,
+                time: initialTime - timeLeft,
+                score: levelScore,
+                moves: moves
+            })
+            .then(response => {
+                console.log(response.data); // Log the response from the backend
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
             setTimerStarted(false);
             setWon(true);
         }
@@ -157,7 +193,7 @@ function GameWindow() {
             <div className={`p-2 flex items-center justify-center bg-white rounded ${css.sidebar}`}>
                 <p className={`m-2`}>Level: {level}</p>
                 <p className={`m-2`}>Time left: {timeLeft}</p>
-                <p className={`m-2`}>Total Score: </p>
+                <p className={`m-2`}>Score: {calculateScore(moves, initialTime, timeLeft, matchedPairs)}</p>
                 <p className={`m-2`}>Moves: {moves}</p>
                 <button className={`m-2`} onClick={resetGame}>New Game</button>
             </div>
@@ -217,10 +253,16 @@ function GameWindow() {
                 } 
             </div>
             {won && (
-                <div className={`flex items-center justify-center ${css.winningScreen}`}>
-                    Congratulations! You completed level with a score of {score}.
-                    <p>Your time: {initialTime - timeLeft}</p>
-                    <button onClick={nextLevel}>Next Level</button>
+                <div className={`flex items-center justify-center flex-col absolute p-3 rounded ${css.winningScreen}`}>
+                    <h2 className={`text-xl`}>Congratulations! You completed level with a score of {calculateScore(moves, initialTime, timeLeft, matchedPairs)}.</h2>
+                    <p className={`text-lg`}>Your time: {initialTime - timeLeft} seconds.</p>
+                    <p className={`text-lg`}>Moves: {moves}</p>
+                    <p className={`text-lg`}>Total score: {totalScore}</p>
+                    <p className={`text-lg`}>Coins earned: {coins}</p>
+                    <div className={`flex w-full`}>
+                        <button className={`cursor-pointer p-1 m-2 ${css.gameButton}`} onClick={nextLevel}>Next Level</button>
+                        <button className={`cursor-pointer p-1 m-2 ${css.resetButton}`} onClick={resetGame}>Restart Game</button>
+                    </div>
                 </div>
             )}
         </div>
