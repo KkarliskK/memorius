@@ -16,6 +16,7 @@ const Signout = () => {
     }, [Cookies.get('token')]);
     const handleLogout = () => {
         Cookies.remove('token');
+        Cookies.remove('username');
         setIsLoggedIn(false);
         navigate('/');
     };

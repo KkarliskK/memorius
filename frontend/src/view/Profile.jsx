@@ -6,6 +6,7 @@ import { Crown, Medal, Tag } from "@phosphor-icons/react";
 import axios from "axios";
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
 
 function Profile() {
@@ -13,6 +14,9 @@ function Profile() {
     const {username} = useParams();
     const [userData, setUserData] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [bestLevel, setBestLevel] = useState('');
+    const [bestScore, setBestScore] = useState('');
+
 
 
     useEffect(() => {
@@ -30,6 +34,38 @@ function Profile() {
                 setIsLoading(false); // Set isLoading to false after the request
             });
     }, [username]);
+
+    useEffect(() => {
+        const username = Cookies.get('username');
+
+        axios.get(`http://localhost:8000/api/user/${username}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            }
+        })
+        .then(response => {
+            const userId = response.data.id; 
+            axios.get(`http://localhost:8000/api/stats/${userId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                }
+            })
+            .then(response => {
+                setBestScore(response.data.highest_total_score);
+                setBestLevel(response.data.highest_level);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }, [username]);
+    
 
     if (isLoading){
         return <>
@@ -82,11 +118,11 @@ function Profile() {
                     <div className={`flex justify-evenly items-center w-10/12 m-3`}>
                         <div className={`flex flex-col items-center justify-center p-3 m-1 h-40 w-1/3 bg-white rounded shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] hover:shadow-[0_0px_8px_-2px_rgba(0,0,0,0.7)] transition-all ${css.tag}`}>
                             <h2 className={`text-3xl m-2`}>Best Score</h2>
-                            <h2 className={`flex justify-center items-center text-3xl w-full m-2`}><Crown size={36} />2859</h2>
+                            <h2 className={`flex justify-center items-center text-3xl w-full m-2`}><Crown size={36} />{bestScore}</h2>
                         </div>
                         <div className={`flex flex-col items-center justify-center p-3 m-1 h-40 w-1/3 bg-white rounded shadow-[0_0px_7px_-2px_rgba(0,0,0,0.7)] hover:shadow-[0_0px_8px_-2px_rgba(0,0,0,0.7)] transition-all ${css.tag}`}>
                             <h2 className={`text-3xl m-2`}>Best Level</h2>
-                            <h2 className={`flex justify-center items-center text-3xl w-full m-2`}><Medal size={36} />Level 17</h2>
+                            <h2 className={`flex justify-center items-center text-3xl w-full m-2`}><Medal size={36} />{bestLevel}</h2>
                         </div>
                     </div>
                 </div>

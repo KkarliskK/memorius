@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Card from '../components/Card.jsx';
 import css from '../style/GameWindow.module.css';
 import Data from '../components/DataCar.js';
+import { useParams } from 'react-router-dom';
 import { Eye, FastForward, Info, Question, Timer } from "@phosphor-icons/react";
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 
 function GameWindow() {
-
     const [showInfo, setShowInfo] = useState(false);
     const handleMouseEnter = () => {
         setShowInfo(true);
@@ -151,29 +152,55 @@ function GameWindow() {
     }, [firstCard, secondCard]);
 
     useEffect(() => {
-        if (matchedPairs === totalPairs) { //here it checks if all cards have been matched to setWin
+        if (matchedPairs === totalPairs) {
+
             const levelScore = calculateScore(moves, initialTime, timeLeft, matchedPairs);
             const newTotalScore = totalScore + levelScore; // Accumulate the level score with the previous total score
             setTotalScore(newTotalScore);
             setCoins(COINS_PER_LEVEL);
 
-            axios.post('/level/completed', {
-                level: level,
-                time: initialTime - timeLeft,
-                score: levelScore,
-                moves: moves
+            const username = Cookies.get('username');
+
+            axios.get(`http://localhost:8000/api/user/${username}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                }
             })
             .then(response => {
-                console.log(response.data); // Log the response from the backend
+                const userId = response.data.id; 
+    
+                // Post level completion data
+                axios.post(`http://localhost:8000/api/level/completed/${userId}`, {
+                    level: level,
+                    time: initialTime - timeLeft,
+                    score: levelScore,
+                    total_score: newTotalScore,
+                    moves: moves
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+                setTimerStarted(false);
+                setWon(true);
+    
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-
-            setTimerStarted(false);
-            setWon(true);
         }
     }, [matchedPairs, totalPairs]);
+    
+    
     
 
     function removeSelection() {

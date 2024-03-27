@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GameController;
+use App\Http\Controllers\GameDataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +31,5 @@ Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->n
 Route::post('/password/reset', [AuthController::class, 'reset'])->name('password.reset');
 
 //game back-end routes
-Route::post('/level/completed', [GameController::class, 'update']);
+Route::post('/level/completed/{id}', [GameDataController::class, 'insert']);
+Route::get('/stats/{id}', [GameDataController::class, 'getHighestStats']);

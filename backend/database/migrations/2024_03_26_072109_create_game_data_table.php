@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('level');
             $table->string('score');
+            $table->string('total_score');
             $table->string('moves');
             $table->string('time');
             $table->timestamps();
@@ -26,6 +27,7 @@ return new class extends Migration
                 'user_id' => '1',
                 'level' => '5',
                 'score' => '2284',
+                'total_score' => '9999',
                 'moves' => '25',
                 'time' => '38',
             ]
