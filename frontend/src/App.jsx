@@ -25,7 +25,7 @@ function App() {
         <Route path='/gamewindow' element={<GameWindow />} /> 
         <Route path='/leaderboard' element={<Leaderboard />} />
         <Route path='/profile/:username' element={<Profile />} /> 
-        <Route path='/settings' element={<Settings />} /> 
+        <Route path='/settings/:username' element={<Settings />} /> 
         <Route path='/resetpassword' element={<PasswordReset />} /> 
         <Route path='/signout' element={<Signout />} /> 
         <Route path='*' element={<Error404 />} />

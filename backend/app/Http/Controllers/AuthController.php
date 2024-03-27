@@ -96,6 +96,44 @@ class AuthController extends Controller
     
         return response()->json($user);
     }
+
+
+    public function update(Request $request, $userId)
+    {
+        $user = User::find($userId);
+        
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $request->validate([
+            'name' => 'string',
+            'username' => 'string|unique:users,username,'.$userId,
+            'email' => 'string|unique:users,email,'.$userId,
+            'mobile' => 'string|unique:users,mobile,'.$userId,
+            'bio' => 'string',
+            'pfp' => 'string',
+        ]);
+
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->mobile = $request->mobile;
+        $user->bio = $request->bio;
+        $user->pfp = $request->pfp;
+
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($user->save()) {
+            return response()->json(['message' => 'Profile updated successfully']);
+        } else {
+            return response()->json(['error' => 'Failed to update profile'], 500);
+        }
+    }
+
+
     
 
 

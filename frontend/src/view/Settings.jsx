@@ -22,6 +22,7 @@ function Settings() {
         }
     }
     
+    
     return (
         <>
             <img className={`absolute w-4/5 bottom-0 left-0 h-2/6 z-10 `} src={wave1} />
