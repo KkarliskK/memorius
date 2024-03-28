@@ -77,12 +77,12 @@ function ProfileSettings() {
         }
         if (!newPassword || !repeatPassword) {
             setPasswordError(true);
-            return; // Exit early if any password field is empty
+            
         }
     
         if(newPassword !== repeatPassword){
             setPasswordError(true);
-            return; // Exit early if passwords don't match
+            
         } else {
             setPasswordError(false);
         }

@@ -32,6 +32,7 @@ function GameWindow() {
     const [timeLeft, setTimeLeft] = useState(60);
     const [timerStarted, setTimerStarted] = useState(false);
     const [initialTime, setInitialTime] = useState(60); 
+    const {username} = useParams();
 
     const SCORE_PER_PAIR = 100; // Score earned per matched pair
     const SCORE_PER_MOVE = 10;   // Score deduction per move
@@ -199,6 +200,45 @@ function GameWindow() {
             });
         }
     }, [matchedPairs, totalPairs]);
+
+
+    //this is for perks
+    const [timeBomb, setBomb] = useState('');
+    const [eyeSpy, setEyeSpy] = useState('');
+    const [skipper, setSkipper] = useState('');
+
+
+    useEffect(() => {
+        const username = Cookies.get('username');
+
+        axios.get(`http://localhost:8000/api/user/${username}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            }
+        })
+        .then(response => {
+            const userId = response.data.id; 
+            axios.get(`http://localhost:8000/api/user/${userId}/perks`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('token')}`,
+                }
+            })
+            .then(response => {
+                setBomb(response.data[0].stock);
+                setEyeSpy(response.data[1].stock);
+                setSkipper(response.data[2].stock);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }, [username]);
     
     
     
@@ -236,21 +276,21 @@ function GameWindow() {
                             className={`p-2 cursor-pointer ${css.perk}`}>
                             <Timer size={32} />
                         </button>
-                        <h2>0</h2> {/*here will be perk count*/}
+                        <h2>{timeBomb}</h2> {/*here will be perk count*/}
                     </div>
                     <div className={`flex flex-col justify-center items-center rounded m-2 ${css.perkContainer}`}>
                         <button
                             className={`p-2 cursor-pointer ${css.perk}`}>
                             <Eye size={32} />
                         </button>
-                        <h2>0</h2> {/*here will be perk count*/}
+                        <h2>{eyeSpy}</h2> {/*here will be perk count*/}
                     </div>
                     <div className={`flex flex-col justify-center items-center rounded m-2 ${css.perkContainer}`}>
                         <button
                             className={`p-2 cursor-pointer ${css.perk}`}>
                             <FastForward size={32} />
                         </button>
-                        <h2>0</h2> {/*here will be perk count*/}
+                        <h2>{skipper}</h2> {/*here will be perk count*/}
                     </div>
                     <Question
                         className={`absolute top-0 right-0 cursor-pointer ${css.infoIcon}`}

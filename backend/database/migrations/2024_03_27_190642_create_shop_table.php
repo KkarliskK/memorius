@@ -12,54 +12,54 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop', function (Blueprint $table) {
+        Schema::create('shops', function (Blueprint $table) {
             $table->id();
-            $table->string('product')->nullable();
+            $table->string('perk')->nullable();
             $table->string('theme')->nullable();
             $table->string('cards')->nullable();
             $table->string('price');
             $table->timestamps();
         });
 
-        DB::table('shop')->insert([
+        DB::table('shops')->insert([
             [
-                'product' => 'time_bomb',
+                'perk' => 'time_bomb',
                 'theme' => '',
                 'cards' => '',
                 'price' => '500',
             ],
             [
-                'product' => 'spy_eye',
+                'perk' => 'spy_eye',
                 'theme' => '',
                 'cards' => '',
                 'price' => '500',
             ],
             [
-                'product' => 'skipper',
+                'perk' => 'skipper',
                 'theme' => '',
                 'cards' => '',
                 'price' => '10000',
             ],
             [
-                'product' => '',
+                'perk' => '',
                 'theme' => 'black_gradient',
                 'cards' => '',
                 'price' => '2500',
             ],
             [
-                'product' => '',
+                'perk' => '',
                 'theme' => '',
                 'cards' => 'programming',
                 'price' => '2500',
             ],
             [
-                'product' => '',
+                'perk' => '',
                 'theme' => '',
                 'cards' => 'cars',
                 'price' => '2500',
             ],
             [
-                'product' => '',
+                'perk' => '',
                 'theme' => '',
                 'cards' => 'emojis',
                 'price' => '2500',

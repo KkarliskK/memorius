@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameDataController;
+use App\Http\Controllers\UserInventoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,3 +35,4 @@ Route::post('/password/reset', [AuthController::class, 'reset'])->name('password
 //game back-end routes
 Route::post('/level/completed/{id}', [GameDataController::class, 'insert']);
 Route::get('/stats/{id}', [GameDataController::class, 'getHighestStats']);
+Route::get('/user/{id}/perks', [UserInventoryController::class, 'getUserPerks']);
