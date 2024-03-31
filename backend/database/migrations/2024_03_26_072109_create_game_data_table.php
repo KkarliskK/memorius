@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('level');
             $table->string('score');
             $table->string('total_score');
+            $table->string('high_score');
             $table->string('moves');
             $table->string('time');
             $table->timestamps();
@@ -29,6 +30,7 @@ return new class extends Migration
                 'level' => '5',
                 'score' => '2284',
                 'total_score' => '9999',
+                'high_score' => '806',
                 'moves' => '25',
                 'time' => '38',
             ]

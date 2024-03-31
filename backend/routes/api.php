@@ -36,3 +36,6 @@ Route::post('/password/reset', [AuthController::class, 'reset'])->name('password
 Route::post('/level/completed/{id}', [GameDataController::class, 'insert']);
 Route::get('/stats/{id}', [GameDataController::class, 'getHighestStats']);
 Route::get('/user/{id}/perks', [UserInventoryController::class, 'getUserPerks']);
+Route::get('/leaderboard', [GameDataController::class, 'getLeaderboard']);
+Route::get('/games/{id}', [GameDataController::class, 'getLastGames']);
+

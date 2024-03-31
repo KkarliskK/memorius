@@ -6,6 +6,9 @@ import { useParams } from 'react-router-dom';
 import { Eye, FastForward, Info, Question, Timer } from "@phosphor-icons/react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Confetti from 'react-confetti';
+import Sound from 'react-sound';
+import winningSound from '../assets/winningSound.wav';
 
 
 function GameWindow() {
@@ -33,6 +36,8 @@ function GameWindow() {
     const [timerStarted, setTimerStarted] = useState(false);
     const [initialTime, setInitialTime] = useState(60); 
     const {username} = useParams();
+    const [showConfetti, setShowConfetti] = useState(false);
+    const [playSound, setPlaySound] = useState(false);
 
     const SCORE_PER_PAIR = 100; // Score earned per matched pair
     const SCORE_PER_MOVE = 10;   // Score deduction per move
@@ -58,8 +63,11 @@ function GameWindow() {
     useEffect(() => {
         if (matchedPairs === totalPairs) {
             setWon(true);
+            setPlaySound(true); 
+            setShowConfetti(true); 
         }
     }, [matchedPairs, totalPairs]);
+    
 
     function generateCards(numPairs) {
         const shuffledCards = shuffleCards(Data, numPairs * 2);
@@ -86,6 +94,8 @@ function GameWindow() {
             setWon(false); 
             setScore(0);
             setLevel(1);
+            setPlaySound(false); 
+            setShowConfetti(false)
         }, 1000); 
     }
 
@@ -94,6 +104,8 @@ function GameWindow() {
         if (level < 20) { 
             setLevel(level + 1);
             setWon(false);
+            setPlaySound(false); 
+            setShowConfetti(false)
             setMoves(0);
             setMatchedPairs(0);
             setTimeout(() => { 
@@ -226,10 +238,19 @@ function GameWindow() {
                 }
             })
             .then(response => {
-                setBomb(response.data[0].stock);
-                setEyeSpy(response.data[1].stock);
-                setSkipper(response.data[2].stock);
-                console.log(response.data);
+                if (response.data && response.data.length >= 3) {
+                    // Check if the perk exists in the user's inventory
+                    setBomb(response.data[0]?.stock || 0);
+                    setEyeSpy(response.data[1]?.stock || 0);
+                    setSkipper(response.data[2]?.stock || 0);
+                } else {
+                    // Handle empty or unexpected response data
+                    console.error('Invalid response data:', response.data);
+                    // Set state to default value (0) if response data is empty
+                    setBomb(0);
+                    setEyeSpy(0);
+                    setSkipper(0);
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -256,6 +277,8 @@ function GameWindow() {
 
     return (
         <>
+        {showConfetti && <Confetti />}
+        {playSound && <Sound url={winningSound} playStatus={Sound.status.PLAYING} />}
         <div className={`w-full flex items-center justify-center flex-col ${css.scoreBoard}`}>
             <div className={`p-2 flex items-center justify-center bg-white rounded ${css.sidebar}`}>
                 <p className={`m-2`}>Level: {level}</p>

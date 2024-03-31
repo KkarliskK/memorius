@@ -7,17 +7,21 @@ import axios from "axios";
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { Line } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2'
+import { Chart as ChartJS } from 'chart.js/auto'
 
 
 function Profile() {
-
-    const {username} = useParams();
+    const { username } = useParams();
     const [userData, setUserData] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [bestLevel, setBestLevel] = useState('');
     const [bestScore, setBestScore] = useState('');
-
-
+    const [lastGames, setLastGames] = useState([]);
+    const [isGraphicView, setIsGraphicView] = useState(false);
+    const [averageTime, setAverageTime] = useState(0); 
+    const [averageScore, setAverageScore] = useState(0);
 
     useEffect(() => {
         setIsLoading(true);
@@ -26,6 +30,40 @@ function Profile() {
             .then(response => {
                 setUserData(response.data);
                 console.log(response.data);
+                // Set userId here too
+                const userId = response.data.id;
+                // Fetch stats and games using userId
+                axios.get(`http://localhost:8000/api/stats/${userId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    }
+                })
+                .then(response => {
+                    setBestScore(response.data.highest_high_score);
+                    setBestLevel(response.data.highest_level);
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+                axios.get(`http://localhost:8000/api/games/${userId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('token')}`,
+                    }
+                })
+                .then(response => {
+                    setLastGames(response.data);
+                    const totalTime = response.data.reduce((total, game) => total + parseFloat(game.time), 0);
+                    const totalScore = response.data.reduce((total, game) => total + parseFloat(game.score), 0);
+                    setAverageTime(totalTime / response.data.length);
+                    setAverageScore(totalScore / response.data.length);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             })
             .catch(error => {
                 console.error(error);
@@ -35,37 +73,34 @@ function Profile() {
             });
     }, [username]);
 
-    useEffect(() => {
-        const username = Cookies.get('username');
-
-        axios.get(`http://localhost:8000/api/user/${username}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Cookies.get('token')}`,
-            }
-        })
-        .then(response => {
-            const userId = response.data.id; 
-            axios.get(`http://localhost:8000/api/stats/${userId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${Cookies.get('token')}`,
-                }
-            })
-            .then(response => {
-                setBestScore(response.data.highest_total_score);
-                setBestLevel(response.data.highest_level);
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }, [username]);
+    const toggleView = () => {
+        setIsGraphicView(prevState => !prevState); // Toggle the state between true and false
+    };
     
+
+    const timeChartData = {
+        labels: lastGames.map(game => game.level),
+        datasets: [
+            {
+                label: 'Time to Complete a Level',
+                data: lastGames.map(game => game.time),
+                backgroundColor: 'rgba(75,192,192,0.4)',
+                borderColor: 'rgba(75,192,192,1)',
+            }
+        ]
+    };
+
+    const scoreChartData = {
+        labels: lastGames.map(game => game.level),
+        datasets: [
+            {
+                label: 'Score',
+                data: lastGames.map(game => game.score),
+                backgroundColor: 'rgba(255,99,132,0.4)',
+                borderColor: 'rgba(255,99,132,1)',
+            }
+        ]
+    };
 
     if (isLoading){
         return <>
@@ -94,8 +129,7 @@ function Profile() {
     }
     return (
         <>
-            <img className={`absolute w-4/5 bottom-0 left-0 h-2/6 z-10 `} src={wave1} />
-            <div className={`relative w-full h-5/6 flex items-center justify-center ${css.mainScreen}`}> 
+            <div className={`relative w-full flex items-center justify-center flex-col ${css.mainScreen}`}> 
                 <img className={`absolute w-4/5 top-0 right-0 rotate-180 ${css.wave2}`} src={wave2} />
                 <div className={`flex w-7/12 flex-col m-4 p-3 rounded shadow-lg justify-center items-center z-10 ${css.profileContainer}`}>
                     <div className={`flex w-full p-3 justify-center items-center flex-col ${css.pfpContainer}`}>
@@ -126,6 +160,34 @@ function Profile() {
                         </div>
                     </div>
                 </div>
+                <div className={`flex w-7/12 flex-col m-4 p-3 rounded shadow-lg justify-center items-center z-10 ${css.profileContainer}`}>
+                    <div className={`${css.header}`}>
+                        <h1 className={`text-3xl `}>Last Games</h1>
+                    </div>
+                    <div className={`${css.gamesInfo}`}>
+                        {isGraphicView ? (
+                            <div className={`${css.graphicView}`}>
+                                <p>Average Time to Complete a Level: {averageTime} seconds.</p> <Line  data={timeChartData} /> 
+                                <p>Average Score:  {averageScore}</p>  <Line data={scoreChartData} />
+                                {/* Add more graphic stats as needed */}
+                            </div>
+                        ) : (
+                            lastGames.map(game => (
+                                <div key={game.id} className={`flex justify-center items-center w-full m-2 p-2 ${css.singleGame}`}>
+                                    <p className={`text-lg m-2`}>Level: {game.level}</p>
+                                    <p className={`text-lg m-2`}>Score: {game.score}</p>
+                                    <p className={`text-lg m-2`}>Moves: {game.moves}</p>
+                                    <p className={`text-lg m-2`}>Time: {game.time} seconds</p>
+                                    {/* Render other game details */}
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <button className={`p-2 m-2 cursor-pointer ${css.toggleButton}`} onClick={toggleView}>
+                        {isGraphicView ? 'Switch to Text View' : 'Switch to Graphic View'}
+                    </button>
+                </div>
+                <img className={`absolute w-4/5 bottom-0 left-0 h-1/6 z-0 `} src={wave1} />
             </div>
         </>
     );
