@@ -33,6 +33,12 @@ body, html {
   
 }
 
+body.dark, html.dark{
+  background-image: radial-gradient( circle 705px at 3.8% 26.2%,  rgba(227,229,255,1) 0%, rgba(135,145,255,1) 100.2% );
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 ::-webkit-scrollbar {

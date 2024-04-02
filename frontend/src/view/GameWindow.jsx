@@ -32,12 +32,13 @@ function GameWindow() {
     const [coins, setCoins] = useState(0);
     const [won, setWon] = useState(false);
     const [matchedPairs, setMatchedPairs] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [timeLeft, setTimeLeft] = useState(120);
     const [timerStarted, setTimerStarted] = useState(false);
-    const [initialTime, setInitialTime] = useState(60); 
+    const [initialTime, setInitialTime] = useState(120); 
     const {username} = useParams();
     const [showConfetti, setShowConfetti] = useState(false);
     const [playSound, setPlaySound] = useState(false);
+    const [gameStarted, setGameStarted] = useState(false);
 
     const SCORE_PER_PAIR = 100; // Score earned per matched pair
     const SCORE_PER_MOVE = 10;   // Score deduction per move
@@ -52,27 +53,31 @@ function GameWindow() {
     }
 
     useEffect(() => {
-        const initialTime = 60 - (level - 1) * 5; 
+        const initialTime = 120 - (level - 1) * 5; 
         setTimeLeft(initialTime);
         setInitialTime(initialTime);
         const numPairs = Math.min(level * 2, 20); 
         setTotalPairs(numPairs);
-        generateCards(numPairs);
+        generateCards(numPairs * 2);
     }, [level]);
 
     useEffect(() => {
-        if (matchedPairs === totalPairs) {
+        if (gameStarted && matchedPairs === totalPairs) {
             setWon(true);
             setPlaySound(true); 
             setShowConfetti(true); 
         }
-    }, [matchedPairs, totalPairs]);
+    }, [gameStarted, matchedPairs, totalPairs]);
+    
+    
     
 
     function generateCards(numPairs) {
-        const shuffledCards = shuffleCards(Data, numPairs * 2);
+        const numCards = Math.min(numPairs * 2, 20); // Ensure maximum of 20 cards
+        const shuffledCards = shuffleCards(Data, numCards);
         setCardsArray(shuffledCards);
     }
+    
 
     function shuffleCards(cards, numCards) {
         const shuffledCards = cards.slice(0, numCards);
@@ -94,6 +99,10 @@ function GameWindow() {
             setWon(false); 
             setScore(0);
             setLevel(1);
+            setTimerStarted(false);
+            setTimeLeft(120);
+            setInitialTime(120);
+            setMatchedPairs(0);
             setPlaySound(false); 
             setShowConfetti(false)
         }, 1000); 
@@ -105,11 +114,11 @@ function GameWindow() {
             setLevel(level + 1);
             setWon(false);
             setPlaySound(false); 
-            setShowConfetti(false)
+            setShowConfetti(false);
             setMoves(0);
             setMatchedPairs(0);
             setTimeout(() => { 
-                const numPairs = Math.min((level + 1) * 2, 20); 
+                const numPairs = Math.min((level + 1) * 2, 20); // Calculate the number of pairs based on the current level
                 generateCards(numPairs); 
             }, 1000); 
         } else {
@@ -117,17 +126,20 @@ function GameWindow() {
         }
     }
     
-
+    
+    
+    
 
     function handleSelectedCards(item) { 
         setTimerStarted(true);
+        setGameStarted(true); // Set gameStarted to true when the user selects the first card
         console.log(typeof item); 
         if (firstCard !== null && firstCard.id !== item.id) { 
             setSecondCard(item); 
         } else { 
             setFirstCard(item); 
         } 
-    } 
+    }
 
     useEffect(() => {
         if (timerStarted && timeLeft > 0) {

@@ -13,6 +13,11 @@ function Header() {
         setIsLoggedIn(Boolean(Cookies.get('token')));
     }, [Cookies.get('token')]);
 
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      document.documentElement.classList.toggle('dark');
+    }
+
 
   return (
     <>
@@ -61,6 +66,9 @@ function Header() {
               Sign In
             </Link>
           )}
+        </div>
+        <div className={`flex justify-center items-center p-0 flex w-1/3 ${css.headerElement}`}>
+          <button className={`uppercase`} onClick={toggleTheme}>Toggle theme</button>
         </div>
       </div>
     </>

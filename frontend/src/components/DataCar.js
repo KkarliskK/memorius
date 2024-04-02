@@ -107,6 +107,65 @@ const Data = [
         img: "https://upload.wikimedia.org/wikipedia/commons/1/13/Kia-logo.png", 
         matched: false, 
     },
-    
+    { 
+        id: 19, 
+        name: "ford", 
+        img: "https://e7.pngegg.com/pngimages/508/395/png-clipart-cars-logo-brands-cars-logo-brands.png", 
+        matched: false, 
+    }, 
+    { 
+        id: 20, 
+        name: "ford", 
+        img: "https://e7.pngegg.com/pngimages/508/395/png-clipart-cars-logo-brands-cars-logo-brands.png", 
+        matched: false, 
+    },
+    { 
+        id: 21, 
+        name: "audi", 
+        img: "https://www.freepnglogos.com/uploads/audi-logo-28.png", 
+        matched: false, 
+    }, 
+    { 
+        id: 22, 
+        name: "audi", 
+        img: "https://www.freepnglogos.com/uploads/audi-logo-28.png", 
+        matched: false, 
+    },
+    { 
+        id: 23, 
+        name: "vw", 
+        img: "https://i.pinimg.com/originals/a3/45/66/a34566c7b7457245769385c8d40e93dd.png", 
+        matched: false, 
+    }, 
+    { 
+        id: 24, 
+        name: "vw", 
+        img: "https://i.pinimg.com/originals/a3/45/66/a34566c7b7457245769385c8d40e93dd.png", 
+        matched: false, 
+    },
+    { 
+        id: 25, 
+        name: "buggati", 
+        img: "https://pngimg.com/uploads/bugatti_logo/bugatti_logo_PNG14.png", 
+        matched: false, 
+    }, 
+    { 
+        id: 26, 
+        name: "buggati", 
+        img: "https://pngimg.com/uploads/bugatti_logo/bugatti_logo_PNG14.png", 
+        matched: false, 
+    },
+    { 
+        id: 27, 
+        name: "ferrari", 
+        img: "https://i.pinimg.com/originals/cd/36/19/cd3619f9e171f176bf0774017147170d.png", 
+        matched: false, 
+    }, 
+    { 
+        id: 28, 
+        name: "ferrari", 
+        img: "https://i.pinimg.com/originals/cd/36/19/cd3619f9e171f176bf0774017147170d.png", 
+        matched: false, 
+    },
 ]; 
 export default Data;
